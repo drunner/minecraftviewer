@@ -4,6 +4,7 @@ function drunner_setup()
 -- addconfig(NAME, DESCRIPTION, DEFAULT VALUE, TYPE, REQUIRED)
    addconfig("PORT","The port to run minecraft veiwer on.","8000","port",true)
    addconfig("MINECRAFT","The name of the minecraft dService","minecraft","string",true)
+   addconfig("WORLD","Name of the minecraft world","world","string",true)
 -- addvolume(NAME, [BACKUP], [EXTERNAL])
    addvolume("drunner-${SERVICENAME}-minecraftviewer",true,false)
 -- addcontainer(NAME)
@@ -17,19 +18,29 @@ function generate()
    result = drun("docker","run","--rm",
    "-v","drunner-${MINECRAFT}-minecraftdata:/minecraft/data",
    "-v","drunner-${SERVICENAME}-minecraftviewer:/www",
-   "${IMAGENAME}","overviewer.py","/minecraft/data","/www")
+   "${IMAGENAME}","/bin/bash","-c",
+   "overviewer.py /minecraft/data/${WORLD} /www")
 
    if result~=0 then
       print("Failed to generate minecraft world www files")
    end
 end
 
+function permissions()
+   result = drun("docker","run","--rm","-v","drunner-${SERVICENAME}-minecraftviewer:/www",
+   "-u","root","${IMAGENAME}","/bin/bash","-c","chmod -R a+rwx /www")
+
+   if result~=0 then
+      print("Failed to set permissions.")
+   end
+end
 
 function start()
-   result=drun("docker","run","--name","nginx-${SERVICENAME}",
+   result=drun("docker","run",
+   "--name","nginx-${SERVICENAME}",
    "-p","${PORT}:80",
-   "-v","drunner-${SERVICENAME}-minecraftviewer:/www",
-   "-d","/www")
+   "-v","drunner-${SERVICENAME}-minecraftviewer:/usr/share/nginx/html:ro",
+   "-d","nginx")
 
   if result~=0 then
      print(dsub("Failed to start nginx webserver on port ${PORT}."))
