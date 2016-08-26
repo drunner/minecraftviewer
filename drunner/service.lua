@@ -26,15 +26,6 @@ function generate()
    end
 end
 
-function permissions()
-   result = drun("docker","run","--rm","-v","drunner-${SERVICENAME}-minecraftviewer:/www",
-   "-u","root","${IMAGENAME}","/bin/bash","-c","chmod -R a+rwx /www")
-
-   if result~=0 then
-      print("Failed to set permissions.")
-   end
-end
-
 function start()
    result=drun("docker","run",
    "--name","nginx-${SERVICENAME}",
