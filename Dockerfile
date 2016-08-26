@@ -15,12 +15,11 @@ ENV VERSION 1.10.2
 RUN groupadd -g 22922 drgroup \
     && adduser --disabled-password --gecos '' -u 22922 --gid 22922 druser
 
+# this actually sticks now for named volumes!
+RUN mkdir /www && chown druser:drgroup /www
+
 USER druser
 
 RUN wget --no-check-certificate https://s3.amazonaws.com/Minecraft.Download/versions/${VERSION}/${VERSION}.jar -P ~/.minecraft/versions/${VERSION}/
 
 COPY ["./drunner","/drunner"]
-
-
-#ENTRYPOINT ["overviewer.py"]
-#CMD ["/minecraft/world", "/www"]

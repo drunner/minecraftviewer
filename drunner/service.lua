@@ -1,5 +1,7 @@
 -- drunner service configuration for minecraft viewer
 
+containername="nginx-${SERVICENAME}"
+
 function drunner_setup()
 -- addconfig(NAME, DESCRIPTION, DEFAULT VALUE, TYPE, REQUIRED)
    addconfig("PORT","The port to run minecraft veiwer on.","8000","port",true)
@@ -16,8 +18,8 @@ end
 
 function generate()
    result = drun("docker","run","--rm",
-   "-v","drunner-${MINECRAFT}-minecraftdata:/minecraft/data",
-   "-v","drunner-${SERVICENAME}-minecraftviewer:/www",
+   "-v","drunner-${MINECRAFT}-minecraftdata:/minecraft/data:ro",
+   "-v","drunner-${SERVICENAME}-minecraftviewer:/www:rw",
    "${IMAGENAME}","/bin/bash","-c",
    "overviewer.py /minecraft/data/${WORLD} /www")
 
@@ -27,19 +29,23 @@ function generate()
 end
 
 function start()
-   result=drun("docker","run",
-   "--name","nginx-${SERVICENAME}",
-   "-p","${PORT}:80",
-   "-v","drunner-${SERVICENAME}-minecraftviewer:/usr/share/nginx/html:ro",
-   "-d","nginx")
+   if (drunning(containername)) then
+      print("minecraftviewer is already running.")
+   else
+      result=drun("docker","run",
+      "--name",containername,
+      "-p","${PORT}:80",
+      "-v","drunner-${SERVICENAME}-minecraftviewer:/usr/share/nginx/html:ro",
+      "-d","nginx")
 
-  if result~=0 then
-     print(dsub("Failed to start nginx webserver on port ${PORT}."))
+     if result~=0 then
+        print(dsub("Failed to start nginx webserver on port ${PORT}."))
+      end
    end
 end
 
 function stop()
-  dstop("nginx-${SERVICENAME}")
+  dstop(containername)
 end
 
 function obliterate_start()
