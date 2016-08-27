@@ -8,14 +8,13 @@ RUN apt-get upgrade -y
 
 RUN echo "deb http://overviewer.org/debian ./" >> /etc/apt/sources.list
 RUN apt-get update
-RUN apt-get install -y --force-yes minecraft-overviewer wget sudo cron
+RUN apt-get install -y --force-yes minecraft-overviewer wget sudo
 
 RUN groupadd -g 22922 drgroup \
     && adduser --disabled-password --gecos '' -u 22922 --gid 22922 druser
 
-#RUN echo "druser ALL= (ALL) NOPASSWD: /usr/local/bin/,/sbin/my_init" > /etc/sudoers.d/samba
-RUN echo "druser ALL= (ALL) NOPASSWD: /usr/local/bin/" > /etc/sudoers.d/druser
-RUN chmod 0440 /etc/sudoers.d/druser
+#RUN echo "druser ALL= (ALL) NOPASSWD: /usr/local/bin/" > /etc/sudoers.d/druser
+#RUN chmod 0440 /etc/sudoers.d/druser
 
 USER druser
 ENV VERSION 1.10.2
@@ -24,8 +23,6 @@ RUN wget --no-check-certificate https://s3.amazonaws.com/Minecraft.Download/vers
 USER root
 # this actually sticks now for named volumes!
 RUN mkdir /www && chown druser:drgroup /www
-RUN touch /var/log/cron.log
-RUN mkdir /etc/cron.d
 COPY ["./usrlocalbin","/usr/local/bin"]
 RUN chmod a+x /usr/local/bin/*
 

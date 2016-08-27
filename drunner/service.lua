@@ -1,7 +1,6 @@
 -- drunner service configuration for minecraft viewer
 
-containername="nginx-${SERVICENAME}"
-generatename="generate-${SERVICENAME}"
+containername="drunner-${SERVICENAME}-nginx"
 
 function drunner_setup()
 -- addconfig(NAME, DESCRIPTION, DEFAULT VALUE, TYPE, REQUIRED)
@@ -37,22 +36,6 @@ function generate()
    end
 end
 
-function autogenerate()
-   if (drunning(generatename)) then
-      print("autogenerate already running")
-   else
-      drun("docker","run","-d",
-      "--name",generatename,
-      "-e","WORLD",
-      "-e","APIKEY",
-      "-v","drunner-${MINECRAFT}-minecraftdata:/minecraft/data:ro",
-      "-v","drunner-${SERVICENAME}-minecraftviewer:/www:rw",
-      "${IMAGENAME}","sudo","runcron.sh")
-   end
-end
-
-
-
 function start()
 --   generate()
 
@@ -75,7 +58,6 @@ end
 
 function stop()
   dstop(containername)
-  dstop(generatename)
 end
 
 function obliterate_start()
