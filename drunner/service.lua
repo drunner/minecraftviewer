@@ -8,7 +8,7 @@ function drunner_setup()
    addconfig("MINECRAFT","The name of the minecraft dService","minecraft","string",true)
    addconfig("WORLD","Name of the minecraft world","world","string",true)
    addconfig("APIKEY","Google maps API key","","string",true)
-   addconfig("VIRTUAL_HOST","The virtual hostname","","string",true)
+   addconfig("VIRTUAL_HOST","The virtual hostname","","string",false)
 
 -- addvolume(NAME, [BACKUP], [EXTERNAL])
    addvolume("drunner-${SERVICENAME}-minecraftviewer",true,false)
