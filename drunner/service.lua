@@ -31,7 +31,7 @@ function generate()
    result = drun("docker","run","--rm",
    "-v","drunner-${SERVICENAME}-minecraftviewer:/www:rw",
    "${IMAGENAME}","/bin/bash","-c",
-   "sed -i 's/sensor=false/key=${APIKEY}/g' mcmap/index.html")
+   "sed -i 's/sensor=false/key=${APIKEY}/g' /www/index.html")
 end
 
 function start()
