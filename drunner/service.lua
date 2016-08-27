@@ -7,6 +7,7 @@ function drunner_setup()
    addconfig("PORT","The port to run minecraft veiwer on.","8000","port",true)
    addconfig("MINECRAFT","The name of the minecraft dService","minecraft","string",true)
    addconfig("WORLD","Name of the minecraft world","world","string",true)
+   addconfig("APIKEY","Google maps API key","","string",true)
 -- addvolume(NAME, [BACKUP], [EXTERNAL])
    addvolume("drunner-${SERVICENAME}-minecraftviewer",true,false)
 -- addcontainer(NAME)
@@ -26,6 +27,11 @@ function generate()
    if result~=0 then
       print("Failed to generate minecraft world www files")
    end
+
+   result = drun("docker","run","--rm",
+   "-v","drunner-${SERVICENAME}-minecraftviewer:/www:rw",
+   "${IMAGENAME}","/bin/bash","-c",
+   "sed -i 's/sensor=false/key=${APIKEY}/g' mcmap/index.html")
 end
 
 function start()
