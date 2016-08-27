@@ -1,6 +1,7 @@
 -- drunner service configuration for minecraft viewer
 
 containername="nginx-${SERVICENAME}"
+generatename="generate-${SERVICENAME}"
 
 function drunner_setup()
 -- addconfig(NAME, DESCRIPTION, DEFAULT VALUE, TYPE, REQUIRED)
@@ -25,22 +26,36 @@ end
 
 function generate()
    result = drun("docker","run","--rm",
+   "-e","WORLD",
+   "-e","APIKEY",
    "-v","drunner-${MINECRAFT}-minecraftdata:/minecraft/data:ro",
    "-v","drunner-${SERVICENAME}-minecraftviewer:/www:rw",
-   "${IMAGENAME}","/bin/bash","-c",
-   "overviewer.py /minecraft/data/${WORLD} /www")
+   "${IMAGENAME}","generate.sh")
 
    if result~=0 then
       print("Failed to generate minecraft world www files")
    end
-
-   result = drun("docker","run","--rm",
-   "-v","drunner-${SERVICENAME}-minecraftviewer:/www:rw",
-   "${IMAGENAME}","/bin/bash","-c",
-   "sed -i 's/sensor=false/key=${APIKEY}/g' /www/index.html")
 end
 
+function autogenerate()
+   if (drunning(generatename)) then
+      print("autogenerate already running")
+   else
+      drun("docker","run","-d",
+      "--name",generatename,
+      "-e","WORLD",
+      "-e","APIKEY",
+      "-v","drunner-${MINECRAFT}-minecraftdata:/minecraft/data:ro",
+      "-v","drunner-${SERVICENAME}-minecraftviewer:/www:rw",
+      "${IMAGENAME}","sudo","runcron.sh")
+   end
+end
+
+
+
 function start()
+--   generate()
+
    if (drunning(containername)) then
       print("minecraftviewer is already running.")
    else
@@ -54,10 +69,13 @@ function start()
         print(dsub("Failed to start nginx webserver on port ${PORT}."))
       end
    end
+
+--   autogenerate()
 end
 
 function stop()
   dstop(containername)
+  dstop(generatename)
 end
 
 function obliterate_start()
