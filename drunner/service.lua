@@ -36,6 +36,19 @@ function generate()
    end
 end
 
+function purge()
+   result = drun("docker","run","--rm",
+   "-e","WORLD",
+   "-e","APIKEY",
+   "-v","drunner-${MINECRAFT}-minecraftdata:/minecraft/data:ro",
+   "-v","drunner-${SERVICENAME}-minecraftviewer:/www:rw",
+   "${IMAGENAME}","rm -rf /www/*")
+
+   if result~=0 then
+      print("Failed to generate minecraft world www files")
+   end
+end
+
 function start()
 --   generate()
 
@@ -76,6 +89,8 @@ function help()
    SYNOPSIS
       ${SERVICENAME} help             - This help
       ${SERVICENAME} configure        - Set port and minecraft dService
+      ${SERVICENAME} generate         - generate the map
+      ${SERVICENAME} purge            - purge map
       ${SERVICENAME} start            - Make it go!
       ${SERVICENAME} stop             - Stop it
 
