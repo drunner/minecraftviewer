@@ -38,11 +38,8 @@ end
 
 function purge()
    result = drun("docker","run","--rm",
-   "-e","WORLD",
-   "-e","APIKEY",
-   "-v","drunner-${MINECRAFT}-minecraftdata:/minecraft/data:ro",
    "-v","drunner-${SERVICENAME}-minecraftviewer:/www:rw",
-   "${IMAGENAME}","rm -rf /www/*")
+   "${IMAGENAME}","bash","-c","rm -rf /www/*")
 
    if result~=0 then
       print("Failed to generate minecraft world www files")
