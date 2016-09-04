@@ -55,7 +55,7 @@ function start()
       result=drun("docker","run",
       "--name",containername,
       "-p","${PORT}:80",
-      "-v","drunner-${SERVICENAME}-minecraftviewer:/usr/share/nginx/html:ro",
+      "-v","drunner-${SERVICENAME}-minecraftviewer:/usr/share/nginx:ro",
       "-d","nginx")
 
      if result~=0 then

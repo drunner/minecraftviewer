@@ -17,5 +17,21 @@ fi
 
 echo "World is ${WORLD}"
 
-overviewer.py "/minecraft/data/${WORLD}" /www
-sed -i "s/sensor=false/key=${APIKEY}/g" /www/index.html
+# get rid of any old cruft
+[ ! -e "/www/new" ] || rm -rf /www/new
+[ ! -e "/www/old" ] || rm -rf /www/old
+
+# preserve cache
+[ ! -e "/www/html" ] || cp -a /www/html /www/new
+
+# generate updated map
+overviewer.py "/minecraft/data/${WORLD}" /www/new
+sed -i "s/sensor=false/key=${APIKEY}/g" /www/new/index.html
+
+# update hosted files
+echo "Updating map"
+[ ! -e "/www/html" ] || mv /www/html /www/old
+mv /www/new /www/html
+
+[ ! -e "/www/new" ] || rm -rf /www/new
+[ ! -e "/www/old" ] || rm -rf /www/old
