@@ -9,6 +9,7 @@ function drunner_setup()
    addconfig("WORLD","Name of the minecraft world","world","string",true)
    addconfig("APIKEY","Google maps API key","","string",true)
    addconfig("VIRTUAL_HOST","The virtual hostname","","string",false)
+   addconfig("GENERATETIME","Minutes between map generation","30","string",false)
 
 -- addvolume(NAME, [BACKUP], [EXTERNAL])
    addvolume("drunner-${SERVICENAME}-minecraftviewer",true,false)
@@ -19,7 +20,7 @@ function drunner_setup()
 
 -- addcron(offsetmin, repeatmin, function)
 -- Generate the map every 30 mins
-   addcron(17,30,generate)
+   addcron(17,"${GENERATETIME}","generate")
 
 end
 
