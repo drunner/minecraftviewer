@@ -17,6 +17,10 @@ function drunner_setup()
 -- addproxy(VIRTUAL_HOST,HTTP_PORT,HTTPS_PORT)
    addproxy("${VIRTUAL_HOST}","${PORT}","")
 
+-- addcron(offsetmin, repeatmin, function)
+-- Generate the map every 30 mins
+   addcron(17,30,generate)
+
 end
 
 
