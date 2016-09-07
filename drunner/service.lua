@@ -11,6 +11,9 @@ function drunner_setup()
    addconfig("VIRTUAL_HOST","The virtual hostname","","string",false)
    addconfig("GENERATETIME","Minutes between map generation","45","string",false)
 
+-- not user settable
+   addconfig("RUNNING","Is the service running","false","bool",true,false)
+
 -- addvolume(NAME, [BACKUP], [EXTERNAL])
    addvolume("drunner-${SERVICENAME}-minecraftviewer",true,false)
 -- addcontainer(NAME)
@@ -44,6 +47,7 @@ end
 function purge()
    result = drun("docker","run","--rm",
    "-v","drunner-${SERVICENAME}-minecraftviewer:/www:rw",
+   "-u","root",
    "${IMAGENAME}","bash","-c","rm -rf /www/*")
 
    if result~=0 then
@@ -53,6 +57,7 @@ end
 
 function start()
 --   generate()
+   dconfig_set("RUNNING","true")
 
    if (drunning(containername)) then
       print("minecraftviewer is already running.")
@@ -72,6 +77,7 @@ function start()
 end
 
 function stop()
+  dconfig_set("RUNNING","false")
   dstop(containername)
 end
 
@@ -81,6 +87,16 @@ end
 
 function uninstall_start()
    stop()
+end
+
+function update_start()
+   dstop(containername)
+end
+
+function update_end()
+   if (dconfig_get("RUNNING")=="true") then
+      start()
+   end
 end
 
 function help()
