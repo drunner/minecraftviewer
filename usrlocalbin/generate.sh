@@ -25,7 +25,7 @@ echo "World is ${WORLD}"
 [ ! -e "/www/html" ] || cp -a /www/html /www/new
 
 # generate updated map
-overviewer.py "/minecraft/data/${WORLD}" /www/new
+overviewer.py --rendermodes=smooth-lighting "/minecraft/data/${WORLD}" /www/new
 sed -i "s/sensor=false/key=${APIKEY}/g" /www/new/index.html
 
 # update hosted files
