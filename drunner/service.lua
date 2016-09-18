@@ -15,7 +15,7 @@ function drunner_setup()
    addconfig("RUNNING","Is the service running","false","bool",true,false)
 
 -- addvolume(NAME, [BACKUP], [EXTERNAL])
-   addvolume("drunner-${SERVICENAME}-minecraftviewer",true,false)
+   addvolume("drunner-${SERVICENAME}-minecraftviewer",false,false)
 -- addcontainer(NAME)
 
 -- addproxy(VIRTUAL_HOST,HTTP_PORT,HTTPS_PORT)
