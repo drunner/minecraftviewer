@@ -7,7 +7,6 @@ function drunner_setup()
    addconfig("PORT","The port to run minecraft veiwer on.","8000","port",true)
    addconfig("MINECRAFT","The name of the minecraft dService","minecraft","string",true)
    addconfig("WORLD","Name of the minecraft world","world","string",true)
-   addconfig("APIKEY","Google maps API key","","string",true)
    addconfig("VIRTUAL_HOST","The virtual hostname","","string",false)
    addconfig("GENERATETIME","Minutes between map generation","45","string",false)
 
@@ -34,7 +33,6 @@ end
 function generate()
    result = drun("docker","run","--rm",
    "-e","WORLD",
-   "-e","APIKEY",
    "-v","drunner-${MINECRAFT}-minecraftdata:/minecraft/data:ro",
    "-v","drunner-${SERVICENAME}-minecraftviewer:/www:rw",
    "${IMAGENAME}","generate.sh")

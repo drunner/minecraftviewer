@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Generate minecraft world.
 
 function die {
   echo "$1"
@@ -7,13 +8,11 @@ function die {
 }
 
 
-if [[ $# -eq 2 ]]; then
+if [[ $# -eq 1 ]]; then
    WORLD="$1"
-   APIKEY="$2"
 fi
 
 [[ -v WORLD ]] || die "WORLD not set."
-[[ -v APIKEY ]] || die "APIKEY not set."
 
 echo "World is ${WORLD}"
 
@@ -25,8 +24,7 @@ echo "World is ${WORLD}"
 [ ! -e "/www/html" ] || cp -a /www/html /www/new
 
 # generate updated map
-overviewer.py --rendermodes=smooth-lighting "/minecraft/data/${WORLD}" /www/new
-sed -i "s/sensor=false/key=${APIKEY}/g" /www/new/index.html
+"/Minecraft-Overviewer/overviewer.py" --rendermodes=smooth-lighting "/minecraft/data/${WORLD}" /www/new
 
 # update hosted files
 echo "Updating map"
