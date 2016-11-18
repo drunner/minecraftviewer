@@ -1,0 +1,23 @@
+# drunner config validator for minecraftviewer
+# if not specified then type=string, required=true, usersettable=true
+
+port=[
+   desc=The port to run minecraft veiwer on.
+   default=8000
+   type=port
+]
+
+minecraft=[
+   desc=The name of the minecraft dService.
+   default=minecraft
+]
+
+world=[
+   desc=Name of the minecraft world.
+   default=world
+]
+
+generatetime=[
+   desc=Minutes between map generation.
+   default="45"
+]

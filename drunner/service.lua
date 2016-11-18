@@ -7,7 +7,6 @@ function drunner_setup()
    addconfig("PORT","The port to run minecraft veiwer on.","8000","port",true)
    addconfig("MINECRAFT","The name of the minecraft dService","minecraft","string",true)
    addconfig("WORLD","Name of the minecraft world","world","string",true)
-   addconfig("VIRTUAL_HOST","The virtual hostname","","string",false)
    addconfig("GENERATETIME","Minutes between map generation","45","string",false)
 
 -- not user settable
@@ -16,9 +15,6 @@ function drunner_setup()
 -- addvolume(NAME, [BACKUP], [EXTERNAL])
    addvolume("drunner-${SERVICENAME}-minecraftviewer",false,false)
 -- addcontainer(NAME)
-
--- addproxy(VIRTUAL_HOST,HTTP_PORT,HTTPS_PORT)
-   addproxy("${VIRTUAL_HOST}","${PORT}","")
 
 -- addcron(offsetmin, repeatmin, function)
 -- Generate the map every 30 mins
